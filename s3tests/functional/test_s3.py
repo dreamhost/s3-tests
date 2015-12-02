@@ -558,7 +558,7 @@ def test_bucket_list_maxkeys_invalid():
 
     e = assert_raises(boto.exception.S3ResponseError, bucket.get_all_keys, max_keys='blah')
     eq(e.status, 400)
-    eq(e.reason, 'Bad Request')
+    eq(e.reason.lower(), 'bad request') # some proxies vary the case
     eq(e.error_code, 'InvalidArgument')
 
 
@@ -572,7 +572,7 @@ def test_bucket_list_maxkeys_unreadable():
 
     e = assert_raises(boto.exception.S3ResponseError, bucket.get_all_keys, max_keys='\x0a')
     eq(e.status, 400)
-    eq(e.reason, 'Bad Request')
+    eq(e.reason.lower(), 'bad request') # some proxies vary the case
     # Weird because you can clearly see an InvalidArgument error code. What's
     # also funny is the Amazon tells us that it's not an interger or within an
     # integer range. Is 'blah' in the integer range?
@@ -2585,7 +2585,7 @@ def check_bad_bucket_name(name):
     """
     e = assert_raises(boto.exception.S3ResponseError, get_new_bucket, targets.main.default, name)
     eq(e.status, 400)
-    eq(e.reason, 'Bad Request')
+    eq(e.reason.lower(), 'bad request') # some proxies vary the case
     eq(e.error_code, 'InvalidBucketName')
 
 
@@ -3641,7 +3641,7 @@ def test_bucket_acl_grant_nonexist_user():
     print policy.to_xml()
     e = assert_raises(boto.exception.S3ResponseError, bucket.set_acl, policy)
     eq(e.status, 400)
-    eq(e.reason, 'Bad Request')
+    eq(e.reason.lower(), 'bad request') # some proxies vary the case
     eq(e.error_code, 'InvalidArgument')
 
 
@@ -3867,7 +3867,7 @@ def test_bucket_acl_grant_email_notexist():
     policy.acl.add_email_grant('FULL_CONTROL', NONEXISTENT_EMAIL)
     e = assert_raises(boto.exception.S3ResponseError, bucket.set_acl, policy)
     eq(e.status, 400)
-    eq(e.reason, 'Bad Request')
+    eq(e.reason.lower(), 'bad request') # some proxies vary the case
     eq(e.error_code, 'UnresolvableGrantByEmailAddress')
 
 
@@ -4277,6 +4277,21 @@ def test_object_copy_same_bucket():
     key2 = bucket.get_key('bar321foo')
     eq(key2.get_contents_as_string(), 'foo')
 
+# http://tracker.ceph.com/issues/11563
+@attr(resource='object')
+@attr(method='put')
+@attr(operation='copy object with content-type')
+@attr(assertion='works')
+def test_object_copy_verify_contenttype():
+    bucket = get_new_bucket()
+    key = bucket.new_key('foo123bar')
+    content_type = 'text/bla'
+    key.set_contents_from_string('foo',headers={'Content-Type': content_type})
+    key.copy(bucket, 'bar321foo')
+    key2 = bucket.get_key('bar321foo')
+    eq(key2.get_contents_as_string(), 'foo')
+    eq(key2.content_type, content_type)
+
 @attr(resource='object')
 @attr(method='put')
 @attr(operation='copy object to itself')
@@ -4287,7 +4302,7 @@ def test_object_copy_to_itself():
     key.set_contents_from_string('foo')
     e = assert_raises(boto.exception.S3ResponseError, key.copy, bucket, 'foo123bar')
     eq(e.status, 400)
-    eq(e.reason, 'Bad Request')
+    eq(e.reason.lower(), 'bad request') # some proxies vary the case
     eq(e.error_code, 'InvalidRequest')
 
 @attr(resource='object')
