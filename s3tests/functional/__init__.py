@@ -80,7 +80,9 @@ def nuke_prefixed_buckets_on_conn(prefix, name, conn):
                     bucket.delete()
                     success = True
                 except boto.exception.S3ResponseError as e:
-                    if e.error_code != 'AccessDenied':
+                    if e.error_code == 'NoSuchBucket':
+                        pass
+                    elif e.error_code != 'AccessDenied':
                         print 'GOT UNWANTED ERROR', e.error_code
                         raise
                     # seems like we don't have permissions set appropriately, we'll
