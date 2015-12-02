@@ -3821,7 +3821,6 @@ def test_bucket_header_acl_grants():
 @attr(method='ACLs')
 @attr(operation='add second FULL_CONTROL user')
 @attr(assertion='works for S3, fails for DHO')
-@attr('fails_on_dho')
 def test_bucket_acl_grant_email():
     bucket = get_new_bucket()
     # add alt user

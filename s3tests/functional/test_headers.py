@@ -298,7 +298,7 @@ def test_object_create_bad_contentlength_negative():
 
     e = assert_raises(boto.exception.S3ResponseError, key.set_contents_from_string, 'bar')
     eq(e.status, 400)
-    eq(e.reason, 'Bad request')
+    eq(e.reason, 'Bad Request')
 
 
 @attr(resource='object')
@@ -324,7 +324,7 @@ def test_object_create_bad_contentlength_unreadable():
 
     e = assert_raises(boto.exception.S3ResponseError, key.set_contents_from_string, 'bar')
     eq(e.status, 400)
-    eq(e.reason, 'Bad request')
+    eq(e.reason, 'Bad Request')
     eq(e.error_code, None)
 
 
@@ -734,7 +734,7 @@ def test_bucket_create_bad_contentlength_negative():
     _add_custom_headers({'Content-Length': -1})
     e = assert_raises(boto.exception.S3ResponseError, get_new_bucket)
     eq(e.status, 400)
-    eq(e.reason, 'Bad request')
+    eq(e.reason, 'Bad Request')
 
 
 @attr(resource='bucket')
@@ -757,7 +757,7 @@ def test_bucket_create_bad_contentlength_unreadable():
     e = assert_raises(boto.exception.S3ResponseError, get_new_bucket)
 
     eq(e.status, 400)
-    eq(e.reason, 'Bad request')
+    eq(e.reason, 'Bad Request')
     eq(e.error_code, None)
 
 
