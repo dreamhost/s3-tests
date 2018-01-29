@@ -8388,6 +8388,8 @@ def _test_sse_kms_customer_write(file_size, key_id = 'testkey-1'):
     Create a file of B's, use it to re-set_contents_from_file.
     Re-read the contents, and confirm we get B's
     """
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     sse_kms_client_headers = {
         'x-amz-server-side-encryption': 'aws:kms',
@@ -8442,6 +8444,8 @@ def test_sse_kms_transfer_13b():
 @attr(assertion='success')
 @attr('encryption')
 def test_sse_kms_method_head():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     sse_kms_client_headers = {
         'x-amz-server-side-encryption': 'aws:kms',
@@ -8466,6 +8470,8 @@ def test_sse_kms_method_head():
 @attr(assertion='operation success')
 @attr('encryption')
 def test_sse_kms_present():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     sse_kms_client_headers = {
         'x-amz-server-side-encryption': 'aws:kms',
@@ -8484,6 +8490,8 @@ def test_sse_kms_present():
 @attr(assertion='operation fails')
 @attr('encryption')
 def test_sse_kms_no_key():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     sse_kms_client_headers = {
         'x-amz-server-side-encryption': 'aws:kms'
@@ -8500,6 +8508,8 @@ def test_sse_kms_no_key():
 @attr(assertion='operation successfull, no encryption')
 @attr('encryption')
 def test_sse_kms_not_declared():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     sse_kms_client_headers = {
         'x-amz-server-side-encryption-aws-kms-key-id': 'testkey-2'
@@ -8517,6 +8527,8 @@ def test_sse_kms_not_declared():
 @attr(assertion='successful')
 @attr('encryption')
 def test_sse_kms_multipart_upload():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     key = "multipart_enc"
     content_type = 'text/plain'
@@ -8553,6 +8565,8 @@ def test_sse_kms_multipart_upload():
 @attr(assertion='successful')
 @attr('encryption')
 def test_sse_kms_multipart_invalid_chunks_1():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     key = "multipart_enc"
     content_type = 'text/bla'
@@ -8577,6 +8591,8 @@ def test_sse_kms_multipart_invalid_chunks_1():
 @attr(assertion='successful')
 @attr('encryption')
 def test_sse_kms_multipart_invalid_chunks_2():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     key = "multipart_enc"
     content_type = 'text/plain'
@@ -8601,6 +8617,8 @@ def test_sse_kms_multipart_invalid_chunks_2():
 @attr(assertion='succeeds and returns written data')
 @attr('encryption')
 def test_sse_kms_post_object_authenticated_request():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
 
     url = _get_post_url(s3.main, bucket)
@@ -8692,6 +8710,8 @@ def test_sse_kms_barb_transfer_13b():
 @attr(assertion='operation fails')
 @attr('encryption')
 def test_sse_kms_read_declare():
+    if 'kms_keyid' not in config['main']:
+        raise SkipTest
     bucket = get_new_bucket()
     sse_kms_client_headers = {
         'x-amz-server-side-encryption': 'aws:kms',
